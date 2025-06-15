@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import dayjs from "dayjs";
 import { CalendarDays } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
 import { useEffect } from "react";
@@ -117,7 +118,7 @@ export default function AddAppointmentForm({
     queryKey: ["available-times", selectedDate, selectedDoctorId],
     queryFn: () =>
       getAvailableTimes({
-        date: selectedDate,
+        date: dayjs(selectedDate).format("YYYY-MM-DD"),
         doctorId: selectedDoctorId,
       }),
     enabled: !!selectedDate && !!selectedDoctorId,

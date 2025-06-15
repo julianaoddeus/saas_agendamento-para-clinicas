@@ -17,7 +17,7 @@ dayjs.extend(timezone);
 export const getAvailableTimes = actionClient
   .schema(
     z.object({
-      date: z.date(),
+      date: z.string().date(),
       doctorId: z.string().uuid(),
     }),
   )
