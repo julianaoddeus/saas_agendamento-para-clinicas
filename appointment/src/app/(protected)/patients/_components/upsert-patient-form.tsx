@@ -36,12 +36,26 @@ import {
 import { patientsTable } from "@/db/schema";
 
 const formSchema = z.object({
-  name: z.string().trim().min(1, {
-    message: "Nome é obrigatório.",
-  }),
-  email: z.string().email({
-    message: "Email inválido.",
-  }),
+  name: z
+    .string()
+    .trim()
+    .min(1, {
+      message: "Nome é obrigatório.",
+    })
+    .transform((val) =>
+      val
+        .split(" ")
+        .map(
+          (word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase(),
+        )
+        .join(" "),
+    ),
+  email: z
+    .string()
+    .email({
+      message: "Email inválido.",
+    })
+    .transform((val) => val.toLowerCase()),
   phoneNumber: z.string().trim().min(1, {
     message: "Número de telefone é obrigatório.",
   }),

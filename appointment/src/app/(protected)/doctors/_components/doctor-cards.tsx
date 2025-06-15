@@ -112,6 +112,7 @@ const DoctorCards = ({ doctor }: DoctorCardsProps) => {
                 availableToTime: availability.to.format("HH:mm:ss"),
               }}
               onSuccess={() => setIsOpen(false)}
+              isOpen={isOpen}
             />
           </DialogContent>
         </Dialog>

@@ -36,16 +36,25 @@ import {
 } from "@/components/ui/select";
 import { doctorsTable } from "@/db/schema";
 
-import { medicalSpecialties } from "../_contants";
-import { generateTimeSlots } from "../_contants/generateTimeSlots";
-import { WeekDays, weekDaysLabels } from "../_contants/week-days-enum";
+import { generateTimeSlots } from "../../_constants/generateTimeSlots";
+import { WeekDays, weekDaysLabels } from "../../_constants/week-days-enum";
+import { medicalSpecialties } from "../_constants";
 const formSchema = z
   .object({
     name: z.string().trim().min(3, { message: "Nome é obrigatório" }),
     speciality: z
       .string()
       .trim()
-      .min(3, { message: "Especialidade é obrigatório" }),
+      .min(3, { message: "Especialidade é obrigatório" })
+      .transform((val) =>
+        val
+          .split(" ")
+          .map(
+            (word) =>
+              word.charAt(0).toUpperCase() + word.slice(1).toLowerCase(),
+          )
+          .join(" "),
+      ),
     appointmentPrice: z
       .number()
       .min(1, { message: "Preço da consulta é obrigatório" }),
@@ -82,7 +91,7 @@ const morningTimeSlots = generateTimeSlots("06:00", "12:30");
 const afternoonTimeSlots = generateTimeSlots("13:00", "18:30");
 const nightTimeSlots = generateTimeSlots("19:00", "23:59");
 
-const UpsertDoctorForm = ({ doctor, onSuccess}: UpsertDoctorFormProps) => {
+const UpsertDoctorForm = ({ doctor, onSuccess }: UpsertDoctorFormProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     shouldUnregister: true,
     resolver: zodResolver(formSchema),
