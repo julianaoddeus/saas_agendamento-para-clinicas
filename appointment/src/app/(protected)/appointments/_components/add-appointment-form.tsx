@@ -207,7 +207,7 @@ export default function AddAppointmentForm({
                     decimalScale={2}
                     fixedDecimalScale
                     decimalSeparator=","
-                    allowNegative={false}                    
+                    allowNegative={false}
                     thousandSeparator="."
                     prefix="R$"
                   />
@@ -280,8 +280,12 @@ export default function AddAppointmentForm({
                   </FormControl>
                   <SelectContent>
                     {availableTimes?.data?.map((time) => (
-                      <SelectItem key={time.value} value={time.value}>
-                        {time.label} {!time.value && "(Indisponível)"}
+                      <SelectItem
+                        key={time.value}
+                        value={time.value}
+                        disabled={!time.isAvailable}
+                      >
+                        {time.label} {!time.isAvailable && "(Indisponível)"}
                       </SelectItem>
                     ))}
                   </SelectContent>
