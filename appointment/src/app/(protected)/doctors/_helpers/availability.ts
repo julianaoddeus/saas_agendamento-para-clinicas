@@ -17,7 +17,7 @@ export const getAvailability = (doctor: typeof doctorsTable.$inferSelect) => {
     .set("hour", Number(doctor.availableFromTime.split(":")[0]))
     .set("minute", Number(doctor.availableFromTime.split(":")[1]))
     .set("second", Number(doctor.availableFromTime.split(":")[2] || 0))
-    .tz("America/Sao_Paulo");
+    .local();
 
   const to = dayjs()
     .utc()
@@ -25,7 +25,7 @@ export const getAvailability = (doctor: typeof doctorsTable.$inferSelect) => {
     .set("hour", Number(doctor.availableToTime.split(":")[0]))
     .set("minute", Number(doctor.availableToTime.split(":")[1]))
     .set("second", Number(doctor.availableToTime.split(":")[2] || 0))
-    .tz("America/Sao_Paulo");
+    .local();
 
   return { from, to };
 };

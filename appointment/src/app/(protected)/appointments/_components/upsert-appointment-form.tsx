@@ -47,7 +47,7 @@ import {
 import { appointmentsTable, doctorsTable, patientsTable } from "@/db/schema";
 import { cn } from "@/lib/utils";
 
-import { generateTimeSlots } from "../../_constants/generateTimeSlots";
+import { generateTimeSlots } from "../../../../helpers/generateTimeSlots";
 
 const formSchema = z.object({
   patientId: z.string().trim().min(1, {

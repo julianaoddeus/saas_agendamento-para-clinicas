@@ -40,25 +40,21 @@ export const addAppointment = actionClient
     const appointmentDate = dayjs(parsedInput.date)
       .set("hour", parseInt(parsedInput.time.split(":")[0]))
       .set("minute", parseInt(parsedInput.time.split(":")[1]))
-      .set("second", parseInt(parsedInput.time.split(":")[2]))
-      .utc();
+      .toDate();
 
     await db
       .insert(appointmentsTable)
       .values({
-        clinicId: session.user.clinic.id,
-        patientId: parsedInput.patientId,
-        doctorId: parsedInput.doctorId,
-        date: appointmentDate.toDate(),
-        appointmentPriceInCents: parsedInput.appointmentPriceInCents,
+        ...parsedInput,
+        clinicId: session.user.clinic?.id,
+        date: appointmentDate,
       })
       .onConflictDoUpdate({
         target: [appointmentsTable.id],
         set: {
-          patientId: parsedInput.patientId,
-          doctorId: parsedInput.doctorId,
-          date: appointmentDate.toDate(),
-          appointmentPriceInCents: parsedInput.appointmentPriceInCents,
+          ...parsedInput,
+          clinicId: session.user.clinic?.id,
+          date: appointmentDate,
         },
       });
 

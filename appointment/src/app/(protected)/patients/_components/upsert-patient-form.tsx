@@ -34,6 +34,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { patientsTable } from "@/db/schema";
+import { capitalize } from "@/helpers/capitalize";
 
 const formSchema = z.object({
   name: z
@@ -42,14 +43,7 @@ const formSchema = z.object({
     .min(1, {
       message: "Nome é obrigatório.",
     })
-    .transform((val) =>
-      val
-        .split(" ")
-        .map(
-          (word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase(),
-        )
-        .join(" "),
-    ),
+    .transform((val) => capitalize(val)),
   email: z
     .string()
     .email({

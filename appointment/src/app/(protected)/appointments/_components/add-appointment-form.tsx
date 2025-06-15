@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
@@ -12,6 +13,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 
 import { addAppointment } from "@/actions/add-appointment";
+import { getAvailableTimes } from "@/actions/get-availible-times";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -38,16 +40,12 @@ import {
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
 import { doctorsTable, patientsTable } from "@/db/schema";
 import { cn } from "@/lib/utils";
-
-import { generateTimeSlots } from "../../_constants/generateTimeSlots";
 
 const schema = z.object({
   patientId: z.string().uuid({ message: "Paciente é obrigatório" }),
@@ -107,16 +105,22 @@ export default function AddAppointmentForm({
     }
   }, [selectedDoctor, form]);
 
-  const morningTimeSlots = generateTimeSlots("08:00", "11:59");
-  const afternoonTimeSlots = generateTimeSlots("12:00", "17:59");
-  const nightTimeSlots = generateTimeSlots("18:00", "22:00");
-
   const onSubmit = form.handleSubmit(async (data) => {
     execute(data);
   });
 
-  const watchPatientId = form.watch("patientId");
-  const watchDoctorId = form.watch("doctorId");
+  const selectedPatientId = form.watch("patientId");
+  const selectedDoctorId = form.watch("doctorId");
+  const selectedDate = form.watch("date");
+
+  const { data: availableTimes } = useQuery({
+    queryKey: ["available-times", selectedDate, selectedDoctorId],
+    queryFn: () =>
+      getAvailableTimes({
+        date: selectedDate,
+        doctorId: selectedDoctorId,
+      }),
+  });
 
   return (
     <DialogContent>
@@ -201,9 +205,11 @@ export default function AddAppointmentForm({
                       );
                     }}
                     decimalScale={2}
+                    fixedDecimalScale
                     decimalSeparator=","
-                    prefix="R$ "
+                    allowNegative={false}                    
                     thousandSeparator="."
+                    prefix="R$"
                   />
                 </FormControl>
                 <FormMessage />
@@ -226,7 +232,7 @@ export default function AddAppointmentForm({
                           "w-full pl-3 text-left font-normal",
                           !field.value && "text-muted-foreground",
                         )}
-                        disabled={!watchPatientId || !watchDoctorId}
+                        disabled={!selectedPatientId || !selectedDoctorId}
                       >
                         {field.value ? (
                           format(field.value, "PPP", { locale: ptBR })
@@ -263,7 +269,9 @@ export default function AddAppointmentForm({
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
-                  disabled={!watchPatientId || !watchDoctorId}
+                  disabled={
+                    !selectedPatientId || !selectedDoctorId || !selectedDate
+                  }
                 >
                   <FormControl>
                     <SelectTrigger className="w-full">
@@ -271,30 +279,11 @@ export default function AddAppointmentForm({
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectGroup>
-                      <SelectLabel>Manhã</SelectLabel>
-                      {morningTimeSlots.map((time) => (
-                        <SelectItem key={time.value} value={time.value}>
-                          {time.label}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                    <SelectGroup>
-                      <SelectLabel>Tarde</SelectLabel>
-                      {afternoonTimeSlots.map((time) => (
-                        <SelectItem key={time.value} value={time.value}>
-                          {time.label}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                    <SelectGroup>
-                      <SelectLabel>Noite</SelectLabel>
-                      {nightTimeSlots.map((time) => (
-                        <SelectItem key={time.value} value={time.value}>
-                          {time.label}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
+                    {availableTimes?.data?.map((time) => (
+                      <SelectItem key={time.value} value={time.value}>
+                        {time.label} {!time.value && "(Indisponível)"}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
                 <FormMessage />

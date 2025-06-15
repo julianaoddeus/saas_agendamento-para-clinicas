@@ -25,16 +25,21 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { capitalize } from "@/helpers/capitalize";
 import { authClient } from "@/lib/auth-client";
-
 
 const registerSchema = z.object({
   name: z
     .string()
     .trim()
     .min(3, { message: "Nome deve conter pelo menos 3 caracteres" })
-    .max(150, { message: "Nome deve conter no máximo 150 caracteres" }),
-  email: z.string().trim().email({ message: "E-mail inválido" }),
+    .max(150, { message: "Nome deve conter no máximo 150 caracteres" })
+    .transform((val) => capitalize(val)),
+  email: z
+    .string()
+    .trim()
+    .email({ message: "E-mail inválido" })
+    .transform((val) => val.toLowerCase()),
   password: z
     .string()
     .trim()

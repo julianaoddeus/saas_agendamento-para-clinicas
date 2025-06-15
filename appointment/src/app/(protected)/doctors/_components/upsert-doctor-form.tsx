@@ -35,26 +35,22 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { doctorsTable } from "@/db/schema";
+import { capitalize } from "@/helpers/capitalize";
 
-import { generateTimeSlots } from "../../_constants/generateTimeSlots";
-import { WeekDays, weekDaysLabels } from "../../_constants/week-days-enum";
+import { generateTimeSlots } from "../../../../helpers/generateTimeSlots";
+import { WeekDays, weekDaysLabels } from "../../../../helpers/week-days-enum";
 import { medicalSpecialties } from "../_constants";
 const formSchema = z
   .object({
-    name: z.string().trim().min(3, { message: "Nome é obrigatório" }),
+    name: z
+      .string()
+      .trim()
+      .min(3, { message: "Nome é obrigatório" })
+      .transform((val) => capitalize(val)),
     specialty: z
       .string()
       .trim()
-      .min(3, { message: "Especialidade é obrigatório" })
-      .transform((val) =>
-        val
-          .split(" ")
-          .map(
-            (word) =>
-              word.charAt(0).toUpperCase() + word.slice(1).toLowerCase(),
-          )
-          .join(" "),
-      ),
+      .min(3, { message: "Especialidade é obrigatório" }),
     appointmentPrice: z
       .number()
       .min(1, { message: "Preço da consulta é obrigatório" }),
