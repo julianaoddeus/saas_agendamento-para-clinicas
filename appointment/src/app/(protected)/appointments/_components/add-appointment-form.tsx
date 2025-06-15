@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { CalendarIcon } from "lucide-react";
+import { CalendarDays } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -120,6 +120,7 @@ export default function AddAppointmentForm({
         date: selectedDate,
         doctorId: selectedDoctorId,
       }),
+    enabled: !!selectedDate && !!selectedDoctorId,
   });
 
   const isDateAvailable = (date: Date): boolean => {
@@ -246,17 +247,17 @@ export default function AddAppointmentForm({
                       <Button
                         variant="outline"
                         className={cn(
-                          "w-full pl-3 text-left font-normal",
+                          "w-full justify-start text-left font-normal",
                           !field.value && "text-muted-foreground",
                         )}
                         disabled={!selectedPatientId || !selectedDoctorId}
                       >
+                        <CalendarDays className="mr-2 h-4 w-4" />
                         {field.value ? (
                           format(field.value, "PPP", { locale: ptBR })
                         ) : (
                           <span>Selecione uma data</span>
                         )}
-                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                       </Button>
                     </FormControl>
                   </PopoverTrigger>
