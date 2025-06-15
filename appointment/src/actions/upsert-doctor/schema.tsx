@@ -2,9 +2,9 @@ import { z } from "zod";
 
 export const upsertDoctorSchema = z
   .object({
-    id: z.string().uuid().optional(),   
+    id: z.string().uuid().optional(),
     name: z.string().trim().min(3, { message: "Nome é obrigatório" }),
-    speciality: z
+    specialty: z
       .string()
       .trim()
       .min(3, { message: "Especialidade é obrigatório" }),

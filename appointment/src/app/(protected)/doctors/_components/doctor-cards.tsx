@@ -75,7 +75,7 @@ const DoctorCards = ({ doctor }: DoctorCardsProps) => {
           </Avatar>
           <div>
             <h3 className="text-sm font-medium">{doctor.name}</h3>
-            <p className="text-muted-foreground text-sm">{doctor.speciality}</p>
+            <p className="text-muted-foreground text-sm">{doctor.specialty}</p>
           </div>
         </div>
       </CardHeader>
@@ -120,9 +120,9 @@ const DoctorCards = ({ doctor }: DoctorCardsProps) => {
           <AlertDialogTrigger asChild>
             <Button
               variant="outline"
-              className="border-destructive text-destructive hover:text-destructive/50 w-full"
+              className="w-full"
             >
-              <Trash2 className="h-4 w-4" />
+              <Trash2 className="h-4 w-4 text-destructive" />
               Deletar Médico
             </Button>
           </AlertDialogTrigger>

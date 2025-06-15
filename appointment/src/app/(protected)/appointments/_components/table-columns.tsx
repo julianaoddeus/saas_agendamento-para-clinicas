@@ -35,8 +35,8 @@ export const appointmentsTableColumns: ColumnDef<Appointment>[] = [
     header: "MÉDICO",
   },
   {
-    id: "speciality",
-    accessorKey: "doctor.speciality",
+    id: "specialty",
+    accessorKey: "doctor.specialty",
     header: "ESPECIALIDADE",
   },
   {

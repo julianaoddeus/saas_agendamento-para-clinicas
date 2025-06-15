@@ -1,6 +1,6 @@
 "use client";
 
-import { Trash2Icon } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
 import { toast } from "sonner";
 
@@ -44,7 +44,7 @@ export default function AppointmentTableActions({
     <AlertDialog>
       <AlertDialogTrigger asChild>
         <Button variant="ghost" size="icon">
-          <Trash2Icon className="mr-2 h-4 w-4" />
+          <Trash2 className="text-destructive h-4 w-4" />
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>

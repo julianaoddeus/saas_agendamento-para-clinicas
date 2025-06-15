@@ -1,4 +1,4 @@
-import { EditIcon, MoreVerticalIcon, TrashIcon } from "lucide-react";
+import { EditIcon, MoreVerticalIcon, Trash2 } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -69,7 +69,7 @@ const PatientsTableActions = ({ patient }: PatientsTableActionsProps) => {
             <AlertDialog>
               <AlertDialogTrigger asChild>
                 <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                  <TrashIcon />
+                  <Trash2 className="text-destructive h-4 w-4" />
                   Excluir
                 </DropdownMenuItem>
               </AlertDialogTrigger>

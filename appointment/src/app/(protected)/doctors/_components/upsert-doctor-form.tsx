@@ -42,7 +42,7 @@ import { medicalSpecialties } from "../_constants";
 const formSchema = z
   .object({
     name: z.string().trim().min(3, { message: "Nome é obrigatório" }),
-    speciality: z
+    specialty: z
       .string()
       .trim()
       .min(3, { message: "Especialidade é obrigatório" })
@@ -97,7 +97,7 @@ const UpsertDoctorForm = ({ doctor, onSuccess }: UpsertDoctorFormProps) => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: doctor?.name ?? "",
-      speciality: doctor?.speciality ?? "",
+      specialty: doctor?.specialty ?? "",
       appointmentPrice: doctor?.appointmentPriceInCents
         ? doctor.appointmentPriceInCents / 100
         : 0,
@@ -155,7 +155,7 @@ const UpsertDoctorForm = ({ doctor, onSuccess }: UpsertDoctorFormProps) => {
           />
           <FormField
             control={form.control}
-            name="speciality"
+            name="specialty"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Especialidades</FormLabel>
