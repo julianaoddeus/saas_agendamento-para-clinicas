@@ -1,4 +1,4 @@
-# 🏥SaaS para Agendamento e monitoramento financeiro de Clínicas Médicas
+# 🏥SAAS para Agendamento e monitoramento financeiro de Clínicas Médicas
 
 ## 📌 Objetivo
 
