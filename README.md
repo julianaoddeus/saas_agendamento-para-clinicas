@@ -1,4 +1,4 @@
-# 🏥 Bootcamp - SaaS para Clínica Médica
+# 🏥SaaS para Agendamento e monitoramento financeiro de Clínicas Médicas
 
 ## 📌 Objetivo
 
