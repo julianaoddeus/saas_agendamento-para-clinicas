@@ -44,11 +44,15 @@ npx shadcn@2.5.0 init
 ```
 
 ## 📦 Estrutura do Projeto
-    /app          # Rotas e componentes de página
-    /components   # Componentes reutilizáveis da UI
-    /lib          # Funções auxiliares e integrações
-    /db           # Migrations, schema e acesso ao banco (Drizzle)
-    /api          # Rotas da API (Next.js)
+    /src/app # Rotas e componentes de página do Next.js
+    /src/components # Componentes reutilizáveis da UI
+    /src/lib # Funções auxiliares e integrações
+    /src/db # Schema e acesso ao banco de dados (Drizzle)
+    /src/api # Rotas da API (Next.js)
+    /src/actions # Server Actions para lógica de backend
+    /src/helpers # Funções utilitárias e helpers
+    /src/providers # Provedores de contexto e estado global
+    /src/hooks # Hooks personalizados
 
 ## 🧪 Em breve...
 - Suporte a múltiplas clínicas (multi-tenant)  
