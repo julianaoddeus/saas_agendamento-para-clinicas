@@ -2,24 +2,13 @@ import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
-import { DataTable } from "@/components/ui/data-table";
-import {
-  PageActions,
-  PageContainer,
-  PageContent,
-  PageHeader,
-  PageHeaderContent,
-  PageHeaderDescription,
-  PageHeaderTitle,
-} from "@/components/ui/page-container";
 import { db } from "@/db";
 import { appointmentsTable, doctorsTable, patientsTable } from "@/db/schema";
 import { auth } from "@/lib/auth";
 
-import AddAppointmentButton from "./_components/add-appointment-button";
-import { appointmentsTableColumns } from "./_components/table-columns";
+import AppointmentsContent from "./_components/appointments-content";
 
-const AppointmentsPage = async () => {
+export default async function AppointmentsPage() {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -49,23 +38,10 @@ const AppointmentsPage = async () => {
   ]);
 
   return (
-    <PageContainer>
-      <PageHeader>
-        <PageHeaderContent>
-          <PageHeaderTitle>Agendamentos</PageHeaderTitle>
-          <PageHeaderDescription>
-            Gerencie os agendamentos da clínica
-          </PageHeaderDescription>
-        </PageHeaderContent>
-        <PageActions>
-          <AddAppointmentButton patients={patients} doctors={doctors} />
-        </PageActions>
-      </PageHeader>
-      <PageContent>
-        <DataTable columns={appointmentsTableColumns} data={appointments} />
-      </PageContent>
-    </PageContainer>
+    <AppointmentsContent
+      appointments={appointments}
+      patients={patients}
+      doctors={doctors}
+    />
   );
-};
-
-export default AppointmentsPage;
+}
