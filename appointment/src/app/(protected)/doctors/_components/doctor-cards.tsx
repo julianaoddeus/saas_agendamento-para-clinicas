@@ -66,7 +66,7 @@ const DoctorCards = ({ doctor }: DoctorCardsProps) => {
     deleteDoctorAction.execute({ id: doctor.id });
   };
   return (
-    <Card>
+    <Card className="max-w-xs">
       <CardHeader>
         <div className="flex items-center gap-2">
           <Avatar className="h-10 w-10">
@@ -118,11 +118,8 @@ const DoctorCards = ({ doctor }: DoctorCardsProps) => {
         </Dialog>
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <Button
-              variant="outline"
-              className="w-full"
-            >
-              <Trash2 className="h-4 w-4 text-destructive" />
+            <Button variant="outline" className="w-full">
+              <Trash2 className="text-destructive h-4 w-4" />
               Deletar Médico
             </Button>
           </AlertDialogTrigger>
