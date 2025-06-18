@@ -1,11 +1,18 @@
 import { headers } from "next/headers";
-import Image from "next/image";
 import { redirect } from "next/navigation";
 
+import {
+  PageActions,
+  PageContainer,
+  PageContent,
+  PageHeader,
+  PageHeaderContent,
+  PageHeaderDescription,
+  PageHeaderTitle,
+} from "@/components/ui/page-container";
 import { auth } from "@/lib/auth";
 
-import AppSidebar from "../_components/app-siderbar";
-import SignOutButton from "./_components/sign-out-button";
+import { DatePicker } from "./_components/date-picker";
 
 const DashboardPage = async () => {
   //--------* acesso a seção de usuário *----------
@@ -22,20 +29,20 @@ const DashboardPage = async () => {
   }
   //--------* fim do acesso a seção de usuário *----------
   return (
-    <>
-      <div className="flex items-center gap-2 p-4">
-        <Image
-          src={session?.user?.image as string}
-          width={24}
-          height={24}
-          alt="User"
-          className="rounded-full"
-        />
-        <h2> Bem vindo, {session.user.name}!</h2>
-      </div>
-      <SignOutButton />
-      <AppSidebar />
-    </>
+    <PageContainer>
+      <PageHeader>
+        <PageHeaderContent>
+          <PageHeaderTitle>Dashboard</PageHeaderTitle>
+          <PageHeaderDescription>
+            Acesse as informações do seu consultório, pacientes e muito mais.
+          </PageHeaderDescription>
+        </PageHeaderContent>
+        <PageActions>
+          <DatePicker />
+        </PageActions>
+      </PageHeader>
+      <PageContent>testo</PageContent>
+    </PageContainer>
   );
 };
 
