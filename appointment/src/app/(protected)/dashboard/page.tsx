@@ -93,8 +93,8 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
 
   const dailyAppointmentsData = await db
     .select({
-      date: sql<string>`Date(${appointmentsTable.date})`.as("date"),
-      appointmens: count(appointmentsTable.id),
+      date: sql<string>`DATE(${appointmentsTable.date})`.as("date"),
+      appointments: count(appointmentsTable.id),
       revenue:
         sql<number>`COALESCE(SUM(${appointmentsTable.appointmentPriceInCents}), 0)`.as(
           "revenue",
@@ -108,8 +108,8 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
         lte(appointmentsTable.date, chartEndDate),
       ),
     )
-    .groupBy(sql`Date(${appointmentsTable.date})`.as("date"))
-    .orderBy(sql`Date(${appointmentsTable.date})`.as("date"));
+    .groupBy(sql`DATE(${appointmentsTable.date})`)
+    .orderBy(sql`DATE(${appointmentsTable.date})`);
 
   return (
     <PageContainer>
@@ -132,13 +132,13 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
           totalDoctors={totalDoctors[0]?.total ?? 0}
         />
         <div className="grid grid-cols-[2.25fr_1fr]">
-          <AppointmentsChart 
-            dailyAppointmentsData={dailyAppointmentsData.map(item => ({
+          <AppointmentsChart
+            dailyAppointmentsData={dailyAppointmentsData.map((item) => ({
               date: item.date,
-              appointments: item.appointmens,
-              revenue: item.revenue
-            }))} 
-          /> 
+              appointments: item.appointments,
+              revenue: item.revenue,
+            }))}
+          />
         </div>
       </PageContent>
     </PageContainer>
