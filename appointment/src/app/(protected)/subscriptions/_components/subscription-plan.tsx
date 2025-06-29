@@ -1,4 +1,4 @@
-import { Check } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -29,13 +29,10 @@ export default function SubscriptionPlan({
   return (
     <Card className="w-full max-w-xs">
       <CardHeader className="space-y-2">
-        <div className="flex items-center gap-2">
-          <h3 className="text-xl font-semibold">Essential</h3>
+        <div className="flex items-center justify-between">
+          <h3 className="text-2xl font-bold text-gray-900">Essential</h3>
           {active && (
-            <Badge
-              variant="secondary"
-              className="bg-emerald-100 text-emerald-700 hover:bg-emerald-100"
-            >
+            <Badge className="bg-green-100 text-green-700 hover:bg-green-100">
               Atual
             </Badge>
           )}
@@ -50,14 +47,16 @@ export default function SubscriptionPlan({
       </CardHeader>
 
       <CardContent className="space-y-3">
-        {features.map((feature, index) => (
-          <div key={index} className="flex items-center gap-3">
-            <div className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-emerald-100">
-              <Check className="h-3 w-3 text-emerald-600" />
+        <div className="space-y-4 border-t border-gray-200 pt-6">
+          {features.map((feature, index) => (
+            <div key={index} className="flex items-start">
+              <div className="flex-shrink-0">
+                <CheckCircle2 className="h-5 w-5 text-green-500" />
+              </div>
+              <p className="ml-3 text-gray-600">{feature}</p>
             </div>
-            <span className="text-sm">{feature}</span>
-          </div>
-        ))}
+          ))}
+        </div>
       </CardContent>
 
       <CardFooter>
