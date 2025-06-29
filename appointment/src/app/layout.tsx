@@ -24,10 +24,28 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${manrope.variable} antialiased`}>
-        <ReactQueryProvider>
-          <NuqsAdapter>{children}</NuqsAdapter>
-        </ReactQueryProvider>
+      <body
+        className={`${manrope.variable} antialiased`}
+        style={{
+          minHeight: "100vh",
+          minWidth: "100vw",
+          maxWidth: "100vw",
+          maxHeight: "100vh",
+          overflowX: "hidden",
+        }}
+      >
+        <div
+          style={{
+            maxWidth: "1550px",
+            margin: "0 auto",
+            width: "100%",
+            minHeight: "100vh",
+          }}
+        >
+          <ReactQueryProvider>
+            <NuqsAdapter>{children}</NuqsAdapter>
+          </ReactQueryProvider>
+        </div>
         <Toaster position="top-right" richColors theme="light" />
       </body>
     </html>
