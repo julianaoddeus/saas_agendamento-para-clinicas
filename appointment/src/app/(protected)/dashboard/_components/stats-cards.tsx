@@ -9,14 +9,14 @@ import { formatCurrencyInCents } from "@/_helpers/currency";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface StatsCardsProps {
-  totalRevenues: number | null;
+  totalRevenue: number | null;
   totalAppointments: number;
   totalPatients: number;
   totalDoctors: number;
 }
 
 const StatsCards = ({
-  totalRevenues,
+  totalRevenue,
   totalAppointments,
   totalPatients,
   totalDoctors,
@@ -24,7 +24,7 @@ const StatsCards = ({
   const stats = [
     {
       title: "Faturamento",
-      value: totalRevenues ? formatCurrencyInCents(totalRevenues) : "R$ 0,00",
+      value: totalRevenue ? formatCurrencyInCents(totalRevenue) : "R$ 0,00",
       icon: DollarSignIcon,
     },
     {
