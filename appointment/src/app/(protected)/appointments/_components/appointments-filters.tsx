@@ -17,7 +17,7 @@ interface AppointmentsFiltersProps {
   onSortChange: (value: "date" | "doctor" | "patient" | "specialty") => void;
 }
 
-export default function AppointmentsFilters({
+export default function AppointmentsFiltersAndOrderBy({
   onFilterChange,
   onSortChange,
 }: AppointmentsFiltersProps) {
@@ -38,7 +38,7 @@ export default function AppointmentsFilters({
           <div className="bg-background flex w-[300px] items-center gap-2 rounded-md border px-3">
             <Search className="h-4 w-4 shrink-0 opacity-50" />
             <Input
-              placeholder="Buscar por nome do paciente ou médico..."
+              placeholder="paciente, médico ou especialidade"
               className="h-9 w-full border-0 p-0 focus-visible:ring-0"
               onChange={(e) => onFilterChange(e.target.value)}
             />
