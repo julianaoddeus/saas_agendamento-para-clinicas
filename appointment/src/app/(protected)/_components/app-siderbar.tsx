@@ -7,6 +7,7 @@ import {
 } from "@radix-ui/react-dropdown-menu";
 import {
   CalendarDays,
+  Gem,
   LayoutDashboard,
   LogOut,
   Stethoscope,
@@ -32,7 +33,7 @@ import {
 import { authClient } from "@/lib/auth-client";
 
 // Menu items.
-const items = [
+const mainMenus = [
   {
     title: "Dashboard",
     url: "/dashboard",
@@ -54,12 +55,19 @@ const items = [
     icon: UsersRound,
   },
 ];
+const othersMenus = [
+  {
+    title: "Assinaturas",
+    url: "/subscriptions",
+    icon: Gem,
+  },
+];
 
 const AppSidebar = () => {
   const router = useRouter();
   const session = authClient.useSession();
   const pathname = usePathname();
-  
+
   const handlerSignOut = async () => {
     await authClient.signOut({
       fetchOptions: {
@@ -80,7 +88,22 @@ const AppSidebar = () => {
           <SidebarGroupLabel>Menu Principal</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) => (
+              {mainMenus.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild isActive={pathname === item.url}>
+                    <Link href={item.url}>
+                      <item.icon />
+                      <span>{item.title}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+          <SidebarGroupLabel>Outros</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {othersMenus.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild isActive={pathname === item.url}>
                     <Link href={item.url}>
@@ -110,7 +133,7 @@ const AppSidebar = () => {
                     <p className="text-sm">
                       {session.data?.user?.clinic?.name}
                     </p>
-                    <p className="text-gray-300 text-sm">
+                    <p className="text-sm text-gray-300">
                       {session.data?.user?.email}
                     </p>
                   </div>
