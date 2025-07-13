@@ -141,7 +141,7 @@ const UpsertDoctorForm = ({ doctor, onSuccess }: UpsertDoctorFormProps) => {
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Nome</FormLabel>
+                <FormLabel>Nome Completo *</FormLabel>
                 <FormControl>
                   <Input {...field} placeholder="Nome do médico" />
                 </FormControl>
@@ -154,7 +154,7 @@ const UpsertDoctorForm = ({ doctor, onSuccess }: UpsertDoctorFormProps) => {
             name="specialty"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Especialidades</FormLabel>
+                <FormLabel>Especialidade *</FormLabel>
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
@@ -181,7 +181,7 @@ const UpsertDoctorForm = ({ doctor, onSuccess }: UpsertDoctorFormProps) => {
             name="appointmentPrice"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Preço da consulta</FormLabel>
+                <FormLabel>Preço da Consulta (R$) *</FormLabel>
                 <NumericFormat
                   value={field.value}
                   onValueChange={(value) => {
@@ -206,7 +206,7 @@ const UpsertDoctorForm = ({ doctor, onSuccess }: UpsertDoctorFormProps) => {
               name="availableFromWeekDays"
               render={({ field }) => (
                 <FormItem className="w-[220px]">
-                  <FormLabel>Disponibilidade inicial</FormLabel>
+                  <FormLabel>Disponível de *</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
@@ -233,7 +233,7 @@ const UpsertDoctorForm = ({ doctor, onSuccess }: UpsertDoctorFormProps) => {
               name="availableToWeekDays"
               render={({ field }) => (
                 <FormItem className="w-[220px]">
-                  <FormLabel>Disponibilidade final</FormLabel>
+                  <FormLabel>Até *</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
@@ -263,7 +263,7 @@ const UpsertDoctorForm = ({ doctor, onSuccess }: UpsertDoctorFormProps) => {
                 name="availableFromTime"
                 render={({ field }) => (
                   <FormItem className="w-[220px]">
-                    <FormLabel>Horário de Disponibilidade inicial</FormLabel>
+                    <FormLabel>Horário Inicial *</FormLabel>
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}
@@ -308,7 +308,7 @@ const UpsertDoctorForm = ({ doctor, onSuccess }: UpsertDoctorFormProps) => {
                 name="availableToTime"
                 render={({ field }) => (
                   <FormItem className="w-[220px]">
-                    <FormLabel>Horário de Disponibilidade final</FormLabel>
+                    <FormLabel>Horário Final *</FormLabel>
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}
