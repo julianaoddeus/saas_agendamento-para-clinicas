@@ -11,7 +11,7 @@ export const protectedActionClient = createSafeActionClient().use(
       headers: await headers(),
     });
     if (!session?.user) {
-      throw new Error("Unauthorized");
+      throw new Error("Não autorizado");
     }
     return next({ ctx: { user: session.user } });
   },
