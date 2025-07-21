@@ -7,6 +7,7 @@ import { NumericFormat } from "react-number-format";
 import { toast } from "sonner";
 import z from "zod";
 
+import { capitalize } from "@/_helpers/capitalize";
 import { upsertDoctor } from "@/actions/upsert-doctor";
 import { Button } from "@/components/ui/button";
 import {
@@ -35,11 +36,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { doctorsTable } from "@/db/schema";
-import { capitalize } from "@/helpers/capitalize";
 
-import { generateTimeSlots } from "../../../../helpers/generateTimeSlots";
-import { WeekDays, weekDaysLabels } from "../../../../helpers/week-days-enum";
+import { generateTimeSlots } from "../../../../_helpers/generateTimeSlots";
+import { WeekDays, weekDaysLabels } from "../../../../_helpers/week-days-enum";
 import { medicalSpecialties } from "../_constants";
+import { doctorInitials } from "../_helpers/doctorInitials";
+import AvatarUpload from "./avatar-upload";
 const formSchema = z
   .object({
     name: z
@@ -66,6 +68,7 @@ const formSchema = z
     availableToTime: z
       .string()
       .min(1, { message: "Horário de término é obrigatório" }),
+    avatarImageUrl: z.string(),
   })
   .refine(
     (data) => {
@@ -88,6 +91,8 @@ const afternoonTimeSlots = generateTimeSlots("13:00", "18:30");
 const nightTimeSlots = generateTimeSlots("19:00", "23:59");
 
 const UpsertDoctorForm = ({ doctor, onSuccess }: UpsertDoctorFormProps) => {
+  const initialsName = doctorInitials(doctor?.name);
+
   const form = useForm<z.infer<typeof formSchema>>({
     shouldUnregister: true,
     resolver: zodResolver(formSchema),
@@ -101,6 +106,7 @@ const UpsertDoctorForm = ({ doctor, onSuccess }: UpsertDoctorFormProps) => {
       availableToWeekDays: `${doctor?.availableToWeekDays ?? WeekDays.FRIDAY}`,
       availableFromTime: doctor?.availableFromTime ?? "",
       availableToTime: doctor?.availableToTime ?? "",
+      avatarImageUrl: doctor?.avatarImageUrl ?? "",
     },
   });
 
@@ -121,6 +127,14 @@ const UpsertDoctorForm = ({ doctor, onSuccess }: UpsertDoctorFormProps) => {
       availableFromWeekDays: parseInt(values.availableFromWeekDays),
       availableToWeekDays: parseInt(values.availableToWeekDays),
       appointmentPriceInCents: values.appointmentPrice * 100,
+      avatarImageUrl: values.avatarImageUrl,
+    });
+  };
+
+  const handleAvatarUploadSuccess = (url: string) => {
+    form.setValue("avatarImageUrl", url, {
+      shouldDirty: true,
+      shouldValidate: true,
     });
   };
 
@@ -136,6 +150,24 @@ const UpsertDoctorForm = ({ doctor, onSuccess }: UpsertDoctorFormProps) => {
       </DialogHeader>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <FormField
+            control={form.control}
+            name="avatarImageUrl"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <AvatarUpload
+                    initialUrl={field.value}
+                    onUploadSuccess={handleAvatarUploadSuccess}
+                    fallbackText={initialsName}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* Campos do formulário */}
           <FormField
             control={form.control}
             name="name"

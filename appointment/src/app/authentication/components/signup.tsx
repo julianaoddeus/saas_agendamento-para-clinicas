@@ -25,7 +25,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { capitalize } from "@/helpers/capitalize";
+import { capitalize } from "@/_helpers/capitalize";
 import { authClient } from "@/lib/auth-client";
 
 const registerSchema = z.object({

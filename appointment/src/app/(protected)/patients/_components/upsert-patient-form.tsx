@@ -34,7 +34,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { patientsTable } from "@/db/schema";
-import { capitalize } from "@/helpers/capitalize";
+import { capitalize } from "@/_helpers/capitalize";
 
 const formSchema = z.object({
   name: z
