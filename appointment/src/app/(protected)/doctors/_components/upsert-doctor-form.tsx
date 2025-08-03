@@ -41,7 +41,7 @@ import { generateTimeSlots } from "../../../../_helpers/generateTimeSlots";
 import { WeekDays, weekDaysLabels } from "../../../../_helpers/week-days-enum";
 import { medicalSpecialties } from "../_constants";
 import { doctorInitials } from "../_helpers/doctorInitials";
-import AvatarUpload from "./avatar-upload";
+import UploadImageDoctorForm from "./upload-image-doctor-form";
 const formSchema = z
   .object({
     name: z
@@ -156,7 +156,7 @@ const UpsertDoctorForm = ({ doctor, onSuccess }: UpsertDoctorFormProps) => {
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <AvatarUpload
+                  <UploadImageDoctorForm
                     initialUrl={field.value}
                     onUploadSuccess={handleAvatarUploadSuccess}
                     fallbackText={initialsName}
