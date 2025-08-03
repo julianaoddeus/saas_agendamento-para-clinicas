@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAction } from "next-safe-action/hooks";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { NumericFormat } from "react-number-format";
 import { toast } from "sonner";
@@ -92,6 +93,9 @@ const nightTimeSlots = generateTimeSlots("19:00", "23:59");
 
 const UpsertDoctorForm = ({ doctor, onSuccess }: UpsertDoctorFormProps) => {
   const initialsName = doctorInitials(doctor?.name);
+  const [selectedAvatarFile, setSelectedAvatarFile] = useState<File | null>(
+    null,
+  );
 
   const form = useForm<z.infer<typeof formSchema>>({
     shouldUnregister: true,
@@ -120,22 +124,39 @@ const UpsertDoctorForm = ({ doctor, onSuccess }: UpsertDoctorFormProps) => {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    let avatarUrl = "";    
+    if (selectedAvatarFile) {
+      const formData = new FormData();
+      formData.append("file", selectedAvatarFile);
+
+      const response = await fetch("/api/upload-doctor", {
+        method: "POST",
+        body: formData,
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        toast.error("Erro ao fazer upload da imagem.");
+      }
+
+      avatarUrl = result?.publicUrl;
+      toast.success("Imagem enviada com sucesso.");
+    }
+
     upsertDoctorAction.execute({
       ...values,
       id: doctor?.id,
       availableFromWeekDays: parseInt(values.availableFromWeekDays),
       availableToWeekDays: parseInt(values.availableToWeekDays),
       appointmentPriceInCents: values.appointmentPrice * 100,
-      avatarImageUrl: values.avatarImageUrl,
+      avatarImageUrl: avatarUrl || "",
     });
   };
 
-  const handleAvatarUploadSuccess = (url: string) => {
-    form.setValue("avatarImageUrl", url, {
-      shouldDirty: true,
-      shouldValidate: true,
-    });
+  const handleAvatarFileSelect = (file: File | null) => { 
+    setSelectedAvatarFile(file);
   };
 
   return (
@@ -158,7 +179,7 @@ const UpsertDoctorForm = ({ doctor, onSuccess }: UpsertDoctorFormProps) => {
                 <FormControl>
                   <UploadImageDoctorForm
                     initialUrl={field.value}
-                    onUploadSuccess={handleAvatarUploadSuccess}
+                    onFileSelect={handleAvatarFileSelect}                 
                     fallbackText={initialsName}
                   />
                 </FormControl>

@@ -54,8 +54,7 @@ export const upsertDoctor = actionClient
       existingImgDoctor &&
       existingImgDoctor.avatarImageUrl &&
       existingImgDoctor.avatarImageUrl !== parsedInput.avatarImageUrl
-    ) {
-      console.log("imagem antiga:", existingImgDoctor.avatarImageUrl);
+    ) {      
       const oldUrl = existingImgDoctor.avatarImageUrl;
       const parts = oldUrl.split("/storage/v1/object/public/doctors-diary01/");
       const oldPath = parts[1];     
