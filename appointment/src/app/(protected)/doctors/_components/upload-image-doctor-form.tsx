@@ -79,7 +79,7 @@ export default function UploadImageDoctorForm({
       >
         <Camera className="h-4 w-4 cursor-pointer text-gray-700" />
       </div>
-      <div className="">
+      <div className="absolute bottom-0 left-18 z-10 rounded-full bg-white p-1 shadow-md">
         {avatarUrl && (
           <Trash2
             className="h-4 w-4 cursor-pointer text-red-500"
