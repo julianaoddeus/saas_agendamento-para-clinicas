@@ -42,8 +42,9 @@ export default function UploadImageDoctorForm({
   };
 
   const deleteHandleUpload = () => {
-    setAvatarUrl(null);
     onFileSelect(null);
+    setAvatarUrl(null);
+
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
@@ -58,34 +59,28 @@ export default function UploadImageDoctorForm({
         accept=".jpg,.png"
         className="hidden"
       />
-      <Avatar
-        className="h-20 w-20 cursor-pointer"
-        onClick={() => fileInputRef.current?.click()}
-      >
+
+      <Avatar className="h-20 w-20">
         {avatarUrl ? (
           <AvatarImage
-            src={avatarUrl || "/profile.png"}
+            src={avatarUrl || "/placeholder.svg"}
             alt="Avatar do médico"
-            width={80}
-            height={80}
             className="rounded-full object-cover"
           />
         ) : (
-          <>
-            {fallbackText ? (
-              <AvatarFallback>{fallbackText}</AvatarFallback>
-            ) : (
-              <AvatarFallback>N/A</AvatarFallback>
-            )}
-          </>
+          <AvatarFallback>{fallbackText || "N/A"}</AvatarFallback>
         )}
       </Avatar>
+
       <div
         className="absolute bottom-0 left-11 z-10 rounded-full bg-white p-1 shadow-md"
         onClick={() => fileInputRef.current?.click()}
         aria-label="Selecionar imagem"
       >
-        <Camera className="h-4 w-4 text-gray-700" />
+        <Camera
+          className="h-4 w-4 cursor-pointer text-gray-700"
+          onClick={() => fileInputRef.current?.click()}
+        />
       </div>
       <div className="">
         {avatarUrl && (
