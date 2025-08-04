@@ -77,10 +77,7 @@ export default function UploadImageDoctorForm({
         onClick={() => fileInputRef.current?.click()}
         aria-label="Selecionar imagem"
       >
-        <Camera
-          className="h-4 w-4 cursor-pointer text-gray-700"
-          onClick={() => fileInputRef.current?.click()}
-        />
+        <Camera className="h-4 w-4 cursor-pointer text-gray-700" />
       </div>
       <div className="">
         {avatarUrl && (
