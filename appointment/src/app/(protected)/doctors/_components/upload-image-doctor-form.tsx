@@ -61,15 +61,12 @@ export default function UploadImageDoctorForm({
       />
 
       <Avatar className="h-20 w-20">
-        {avatarUrl ? (
-          <AvatarImage
-            src={avatarUrl || "/placeholder.svg"}
-            alt="Avatar do médico"
-            className="rounded-full object-cover"
-          />
-        ) : (
-          <AvatarFallback>{fallbackText || "N/A"}</AvatarFallback>
-        )}
+        <AvatarImage
+          src={avatarUrl || "/placeholder.svg"}
+          alt="Avatar do médico"
+          className="rounded-full object-cover"
+        />
+        <AvatarFallback>{fallbackText || "N/A"}</AvatarFallback>
       </Avatar>
 
       <div
