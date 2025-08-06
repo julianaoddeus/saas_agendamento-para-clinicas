@@ -8,6 +8,7 @@ import { PatternFormat } from "react-number-format";
 import { toast } from "sonner";
 import { z } from "zod";
 
+import { capitalize } from "@/_helpers/capitalize";
 import { upsertPatient } from "@/actions/upsert-patient";
 import { Button } from "@/components/ui/button";
 import {
@@ -34,7 +35,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { patientsTable } from "@/db/schema";
-import { capitalize } from "@/_helpers/capitalize";
 
 const formSchema = z.object({
   name: z

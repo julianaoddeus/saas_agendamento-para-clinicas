@@ -38,11 +38,11 @@ import {
 } from "@/components/ui/select";
 import { doctorsTable } from "@/db/schema";
 
+import { InitialNames } from "../../../../_helpers/format-Initials";
 import { generateTimeSlots } from "../../../../_helpers/generateTimeSlots";
 import { WeekDays, weekDaysLabels } from "../../../../_helpers/week-days-enum";
+import UploadImageForm from "../../_components/upload-image-form";
 import { medicalSpecialties } from "../_constants";
-import { doctorInitials } from "../_helpers/doctorInitials";
-import UploadImageDoctorForm from "./upload-image-doctor-form";
 const formSchema = z
   .object({
     name: z
@@ -92,7 +92,7 @@ const afternoonTimeSlots = generateTimeSlots("13:00", "18:30");
 const nightTimeSlots = generateTimeSlots("19:00", "23:59");
 
 const UpsertDoctorForm = ({ doctor, onSuccess }: UpsertDoctorFormProps) => {
-  const initialsName = doctorInitials(doctor?.name);
+  const initialsName = InitialNames(doctor?.name);
   const [selectedAvatarFile, setSelectedAvatarFile] = useState<File | null>(
     null,
   );
@@ -125,7 +125,7 @@ const UpsertDoctorForm = ({ doctor, onSuccess }: UpsertDoctorFormProps) => {
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    let avatarUrl = "";    
+    let avatarUrl = "";
     if (selectedAvatarFile) {
       const formData = new FormData();
       formData.append("file", selectedAvatarFile);
@@ -155,7 +155,7 @@ const UpsertDoctorForm = ({ doctor, onSuccess }: UpsertDoctorFormProps) => {
     });
   };
 
-  const handleAvatarFileSelect = (file: File | null) => { 
+  const handleAvatarFileSelect = (file: File | null) => {
     setSelectedAvatarFile(file);
   };
 
@@ -177,9 +177,9 @@ const UpsertDoctorForm = ({ doctor, onSuccess }: UpsertDoctorFormProps) => {
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <UploadImageDoctorForm
+                  <UploadImageForm
                     initialUrl={field.value}
-                    onFileSelect={handleAvatarFileSelect}                 
+                    onFileSelect={handleAvatarFileSelect}
                     fallbackText={initialsName}
                   />
                 </FormControl>

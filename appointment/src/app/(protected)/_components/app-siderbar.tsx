@@ -17,7 +17,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Sidebar,
   SidebarContent,
@@ -32,6 +32,7 @@ import {
 } from "@/components/ui/sidebar";
 import { authClient } from "@/lib/auth-client";
 
+import { InitialNames } from "../../../_helpers/format-Initials";
 // Menu items.
 const mainMenus = [
   {
@@ -77,7 +78,7 @@ const AppSidebar = () => {
       },
     });
   };
-
+  const initialsName = InitialNames(session?.data?.user?.name);
   return (
     <Sidebar>
       <SidebarContent>
@@ -123,11 +124,13 @@ const AppSidebar = () => {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton size="lg">
-                  <Avatar>
+                  <Avatar className="h-10 w-10">
                     <AvatarImage
-                      src="https://github.com/shadcn.png"
-                      alt="avatar"
+                      src={session?.data?.user?.image || ""}
+                      alt={session?.data?.user?.name || "Avatar"}
+                      className="h-full w-full object-cover"
                     />
+                    <AvatarFallback>{initialsName}</AvatarFallback>
                   </Avatar>
                   <div>
                     <p className="text-sm">

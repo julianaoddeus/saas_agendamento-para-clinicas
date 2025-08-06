@@ -13,7 +13,7 @@ interface AvatarUploadProps {
   fallbackText: string;
 }
 
-export default function UploadImageDoctorForm({
+export default function UploadImageForm({
   initialUrl,
   onFileSelect,
   fallbackText,

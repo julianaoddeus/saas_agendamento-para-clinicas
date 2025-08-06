@@ -1,4 +1,4 @@
-export const doctorInitials = (name: string | undefined) => {
+export const InitialNames = (name: string | undefined) => {
   return name
     ? name
         .split(" ")

@@ -36,8 +36,8 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 import { doctorsTable } from "@/db/schema";
 
+import { InitialNames } from "../../../../_helpers/format-Initials";
 import { getAvailability } from "../_helpers/availability";
-import { doctorInitials } from "../_helpers/doctorInitials";
 import UpsertDoctorForm from "./upsert-doctor-form";
 interface DoctorCardsProps {
   doctor: typeof doctorsTable.$inferSelect;
@@ -45,7 +45,7 @@ interface DoctorCardsProps {
 
 const DoctorCards = ({ doctor }: DoctorCardsProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const initialsName = doctorInitials(doctor?.name);
+  const initialsName = InitialNames(doctor?.name);
 
   const availability = getAvailability(doctor);
 
