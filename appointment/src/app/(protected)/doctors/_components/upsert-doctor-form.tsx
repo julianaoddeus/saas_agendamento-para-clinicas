@@ -161,33 +161,38 @@ const UpsertDoctorForm = ({ doctor, onSuccess }: UpsertDoctorFormProps) => {
 
   return (
     <DialogContent>
-      <DialogHeader>
-        <DialogTitle>{doctor ? doctor.name : "Adicionar médico"}</DialogTitle>
-        <DialogDescription>
-          {doctor
-            ? "Edite as informações do médico"
-            : "Adicione um novo médico"}
-        </DialogDescription>
-      </DialogHeader>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          <FormField
-            control={form.control}
-            name="avatarImageUrl"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <UploadImageForm
-                    initialUrl={field.value}
-                    onFileSelect={handleAvatarFileSelect}
-                    fallbackText={initialsName}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
+          <DialogHeader className="flex flex-row items-start gap-4 pb-4">
+            <div className="flex-shrink-0">
+              <FormField
+                control={form.control}
+                name="avatarImageUrl"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <UploadImageForm
+                        initialUrl={field.value}
+                        onFileSelect={handleAvatarFileSelect}
+                        fallbackText={initialsName}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className="flex-1 pt-6">
+              <DialogTitle>
+                {doctor ? doctor.name : "Adicionar médico"}
+              </DialogTitle>
+              <DialogDescription>
+                {doctor
+                  ? "Edite as informações do médico"
+                  : "Adicione um novo médico"}
+              </DialogDescription>
+            </div>
+          </DialogHeader>
           {/* Campos do formulário */}
           <FormField
             control={form.control}

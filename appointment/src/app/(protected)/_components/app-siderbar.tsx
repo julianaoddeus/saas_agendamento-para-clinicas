@@ -17,6 +17,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 
+import AccountForm from "@/app/authentication/components/account";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Sidebar,
@@ -148,12 +149,12 @@ const AppSidebar = () => {
                 alignOffset={-12}
                 sideOffset={8}
               >
+                <AccountForm />
                 <DropdownMenuItem
                   onClick={handlerSignOut}
                   className="flex cursor-pointer items-center gap-2"
                 >
-                  <LogOut className="h-4 w-4" />
-                  Sair
+                  <LogOut className="h-4 w-4" /> Sair
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
