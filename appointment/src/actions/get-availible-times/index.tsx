@@ -8,7 +8,7 @@ import z from "zod";
 
 import { db } from "@/db";
 import { appointmentsTable, doctorsTable } from "@/db/schema";
-import { generateTimeSlots } from "@/helpers/generateTimeSlots";
+import { generateTimeSlots } from "@/_helpers/generateTimeSlots";
 import { actionClient } from "@/lib/next-safe-action";
 
 dayjs.extend(utc);

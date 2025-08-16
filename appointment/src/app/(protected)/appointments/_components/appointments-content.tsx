@@ -15,7 +15,7 @@ import {
 import { appointmentsTable, doctorsTable, patientsTable } from "@/db/schema";
 
 import AddAppointmentButton from "./add-appointment-button";
-import AppointmentsFilters from "./appointments-filters";
+import AppointmentsFiltersAndOrderBy from "./appointments-filters";
 import { appointmentsTableColumns } from "./table-columns";
 
 type Appointment = typeof appointmentsTable.$inferSelect & {
@@ -75,7 +75,7 @@ export default function AppointmentsContent({
           </PageHeaderDescription>
         </PageHeaderContent>
         <PageActions>
-          <AppointmentsFilters
+          <AppointmentsFiltersAndOrderBy
             onFilterChange={setFilterValue}
             onSortChange={setSortBy}
           />

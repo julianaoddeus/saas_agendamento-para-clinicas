@@ -36,6 +36,7 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 import { doctorsTable } from "@/db/schema";
 
+import { InitialNames } from "../../../../_helpers/format-Initials";
 import { getAvailability } from "../_helpers/availability";
 import UpsertDoctorForm from "./upsert-doctor-form";
 interface DoctorCardsProps {
@@ -44,10 +45,7 @@ interface DoctorCardsProps {
 
 const DoctorCards = ({ doctor }: DoctorCardsProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const doctorInitials = doctor.name
-    .split(" ")
-    .map((name) => name[0])
-    .join("");
+  const initialsName = InitialNames(doctor?.name);
 
   const availability = getAvailability(doctor);
 
@@ -65,13 +63,18 @@ const DoctorCards = ({ doctor }: DoctorCardsProps) => {
 
     deleteDoctorAction.execute({ id: doctor.id });
   };
+
   return (
-    <Card>
+    <Card className="max-w-xs">
       <CardHeader>
         <div className="flex items-center gap-2">
           <Avatar className="h-10 w-10">
-            <AvatarImage src="https://github.com/shadcn.png" />
-            <AvatarFallback>{doctorInitials}</AvatarFallback>
+            <AvatarImage
+              src={doctor.avatarImageUrl ?? initialsName}
+              alt={doctor.name}
+              className="h-full w-full object-cover"
+            />
+            <AvatarFallback>{initialsName}</AvatarFallback>
           </Avatar>
           <div>
             <h3 className="text-sm font-medium">{doctor.name}</h3>
@@ -118,11 +121,8 @@ const DoctorCards = ({ doctor }: DoctorCardsProps) => {
         </Dialog>
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <Button
-              variant="outline"
-              className="w-full"
-            >
-              <Trash2 className="h-4 w-4 text-destructive" />
+            <Button variant="outline" className="w-full">
+              <Trash2 className="text-destructive h-4 w-4" />
               Deletar Médico
             </Button>
           </AlertDialogTrigger>

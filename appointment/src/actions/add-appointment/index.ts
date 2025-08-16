@@ -33,7 +33,7 @@ export const addAppointment = actionClient
     });
 
     if (!session?.user) {
-      throw new Error("Unauthorized");
+      throw new Error("Não autorizado");
     }
     if (!session.user.clinic?.id) {
       throw new Error("Clinic not found");
@@ -78,4 +78,5 @@ export const addAppointment = actionClient
       });
 
     revalidatePath("/appointments");
+    revalidatePath("/dashboard");
   });

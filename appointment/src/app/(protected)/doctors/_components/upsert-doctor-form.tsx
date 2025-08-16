@@ -2,11 +2,13 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAction } from "next-safe-action/hooks";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { NumericFormat } from "react-number-format";
 import { toast } from "sonner";
 import z from "zod";
 
+import { capitalize } from "@/_helpers/capitalize";
 import { upsertDoctor } from "@/actions/upsert-doctor";
 import { Button } from "@/components/ui/button";
 import {
@@ -35,10 +37,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { doctorsTable } from "@/db/schema";
-import { capitalize } from "@/helpers/capitalize";
 
-import { generateTimeSlots } from "../../../../helpers/generateTimeSlots";
-import { WeekDays, weekDaysLabels } from "../../../../helpers/week-days-enum";
+import { InitialNames } from "../../../../_helpers/format-Initials";
+import { generateTimeSlots } from "../../../../_helpers/generateTimeSlots";
+import { WeekDays, weekDaysLabels } from "../../../../_helpers/week-days-enum";
+import UploadImageForm from "../../_components/upload-image-form";
 import { medicalSpecialties } from "../_constants";
 const formSchema = z
   .object({
@@ -66,6 +69,7 @@ const formSchema = z
     availableToTime: z
       .string()
       .min(1, { message: "Horário de término é obrigatório" }),
+    avatarImageUrl: z.string(),
   })
   .refine(
     (data) => {
@@ -88,6 +92,11 @@ const afternoonTimeSlots = generateTimeSlots("13:00", "18:30");
 const nightTimeSlots = generateTimeSlots("19:00", "23:59");
 
 const UpsertDoctorForm = ({ doctor, onSuccess }: UpsertDoctorFormProps) => {
+  const initialsName = InitialNames(doctor?.name);
+  const [selectedAvatarFile, setSelectedAvatarFile] = useState<File | null>(
+    null,
+  );
+
   const form = useForm<z.infer<typeof formSchema>>({
     shouldUnregister: true,
     resolver: zodResolver(formSchema),
@@ -101,6 +110,7 @@ const UpsertDoctorForm = ({ doctor, onSuccess }: UpsertDoctorFormProps) => {
       availableToWeekDays: `${doctor?.availableToWeekDays ?? WeekDays.FRIDAY}`,
       availableFromTime: doctor?.availableFromTime ?? "",
       availableToTime: doctor?.availableToTime ?? "",
+      avatarImageUrl: doctor?.avatarImageUrl ?? "",
     },
   });
 
@@ -114,34 +124,82 @@ const UpsertDoctorForm = ({ doctor, onSuccess }: UpsertDoctorFormProps) => {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    let avatarUrl = "";
+    if (selectedAvatarFile) {
+      const formData = new FormData();
+      formData.append("file", selectedAvatarFile);
+
+      const response = await fetch("/api/upload-doctor", {
+        method: "POST",
+        body: formData,
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        toast.error("Erro ao fazer upload da imagem.");
+      }
+
+      avatarUrl = result?.publicUrl;
+      toast.success("Imagem enviada com sucesso.");
+    }
+
     upsertDoctorAction.execute({
       ...values,
       id: doctor?.id,
       availableFromWeekDays: parseInt(values.availableFromWeekDays),
       availableToWeekDays: parseInt(values.availableToWeekDays),
       appointmentPriceInCents: values.appointmentPrice * 100,
+      avatarImageUrl: avatarUrl || "",
     });
+  };
+
+  const handleAvatarFileSelect = (file: File | null) => {
+    setSelectedAvatarFile(file);
   };
 
   return (
     <DialogContent>
-      <DialogHeader>
-        <DialogTitle>{doctor ? doctor.name : "Adicionar médico"}</DialogTitle>
-        <DialogDescription>
-          {doctor
-            ? "Edite as informações do médico"
-            : "Adicione um novo médico"}
-        </DialogDescription>
-      </DialogHeader>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <DialogHeader className="flex flex-row items-start gap-4 pb-4">
+            <div className="flex-shrink-0">
+              <FormField
+                control={form.control}
+                name="avatarImageUrl"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <UploadImageForm
+                        initialUrl={field.value}
+                        onFileSelect={handleAvatarFileSelect}
+                        fallbackText={initialsName}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className="flex-1 pt-6">
+              <DialogTitle>
+                {doctor ? doctor.name : "Adicionar médico"}
+              </DialogTitle>
+              <DialogDescription>
+                {doctor
+                  ? "Edite as informações do médico"
+                  : "Adicione um novo médico"}
+              </DialogDescription>
+            </div>
+          </DialogHeader>
+          {/* Campos do formulário */}
           <FormField
             control={form.control}
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Nome</FormLabel>
+                <FormLabel>Nome Completo *</FormLabel>
                 <FormControl>
                   <Input {...field} placeholder="Nome do médico" />
                 </FormControl>
@@ -154,7 +212,7 @@ const UpsertDoctorForm = ({ doctor, onSuccess }: UpsertDoctorFormProps) => {
             name="specialty"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Especialidades</FormLabel>
+                <FormLabel>Especialidade *</FormLabel>
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
@@ -181,7 +239,7 @@ const UpsertDoctorForm = ({ doctor, onSuccess }: UpsertDoctorFormProps) => {
             name="appointmentPrice"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Preço da consulta</FormLabel>
+                <FormLabel>Preço da Consulta (R$) *</FormLabel>
                 <NumericFormat
                   value={field.value}
                   onValueChange={(value) => {
@@ -206,7 +264,7 @@ const UpsertDoctorForm = ({ doctor, onSuccess }: UpsertDoctorFormProps) => {
               name="availableFromWeekDays"
               render={({ field }) => (
                 <FormItem className="w-[220px]">
-                  <FormLabel>Disponibilidade inicial</FormLabel>
+                  <FormLabel>Disponível de *</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
@@ -233,7 +291,7 @@ const UpsertDoctorForm = ({ doctor, onSuccess }: UpsertDoctorFormProps) => {
               name="availableToWeekDays"
               render={({ field }) => (
                 <FormItem className="w-[220px]">
-                  <FormLabel>Disponibilidade final</FormLabel>
+                  <FormLabel>Até *</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
@@ -263,7 +321,7 @@ const UpsertDoctorForm = ({ doctor, onSuccess }: UpsertDoctorFormProps) => {
                 name="availableFromTime"
                 render={({ field }) => (
                   <FormItem className="w-[220px]">
-                    <FormLabel>Horário de Disponibilidade inicial</FormLabel>
+                    <FormLabel>Horário Inicial *</FormLabel>
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}
@@ -308,7 +366,7 @@ const UpsertDoctorForm = ({ doctor, onSuccess }: UpsertDoctorFormProps) => {
                 name="availableToTime"
                 render={({ field }) => (
                   <FormItem className="w-[220px]">
-                    <FormLabel>Horário de Disponibilidade final</FormLabel>
+                    <FormLabel>Horário Final *</FormLabel>
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}

@@ -1,6 +1,7 @@
 "use server";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
+import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 
@@ -8,6 +9,7 @@ import { db } from "@/db";
 import { doctorsTable } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { actionClient } from "@/lib/next-safe-action";
+import { createServerClient } from "@/lib/supabase-client";
 
 import { upsertDoctorSchema } from "./schema";
 
@@ -35,10 +37,42 @@ export const upsertDoctor = actionClient
     });
 
     if (!session?.user) {
-      throw new Error("Unauthorized");
+      throw new Error("Não autorizado");
     }
     if (!session.user.clinic?.id) {
       throw new Error("Clinic not found");
+    }
+
+    const existingImgDoctor = parsedInput.id
+      ? await db
+          .select()
+          .from(doctorsTable)
+          .where(eq(doctorsTable.id, parsedInput.id))
+          .then((res) => res[0])
+      : null;
+    if (
+      existingImgDoctor &&
+      existingImgDoctor.avatarImageUrl &&
+      existingImgDoctor.avatarImageUrl !== parsedInput.avatarImageUrl
+    ) {      
+      const oldUrl = existingImgDoctor.avatarImageUrl;
+      const parts = oldUrl.split("/storage/v1/object/public/doctors-diary01/");
+      const oldPath = parts[1];     
+
+      if (oldPath) {
+        const supabase = createServerClient();
+
+        const { error: deleteError } = await supabase.storage
+          .from("doctors-diary01")
+          .remove([oldPath]);
+
+        if (deleteError) {
+          console.error(
+            "Erro ao atualizar imagem!",
+            deleteError,
+          );
+        }
+      }
     }
 
     await db
