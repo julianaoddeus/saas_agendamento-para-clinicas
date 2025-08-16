@@ -8,7 +8,6 @@ import { clinicsTable, usersToClinicsTable } from "@/db/schema";
 import { auth } from "@/lib/auth";
 
 export const createClinic = async (name: string) => {
-  console.log(name)
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -16,18 +15,20 @@ export const createClinic = async (name: string) => {
   if (!session?.user) {
     throw new Error("Não autorizado");
   }
-  const existingClinic = await db
-    .select()
-    .from(clinicsTable)
-    .where(eq(clinicsTable.id, session.user.id))
+
+  const userClinic = await db
+    .select({
+      clinicId: usersToClinicsTable.clinicId,
+    })
+    .from(usersToClinicsTable)
+    .where(eq(usersToClinicsTable.userId, session.user.id))
     .limit(1);
 
-  console.log(existingClinic);
-  if (existingClinic.length > 0) {
+  if (userClinic.length > 0) {
     await db
       .update(clinicsTable)
       .set({ name })
-      .where(eq(clinicsTable.id, session.user.id));
+      .where(eq(clinicsTable.id, userClinic[0].clinicId));
     return;
   }
 
