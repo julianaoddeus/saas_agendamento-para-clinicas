@@ -82,8 +82,7 @@ export default function SettingsProfileForm() {
       if (values.image?.trim()) {
         await updateImageProfile(avatarUrl);
       }
-      if (values.name?.trim()) {
-        console.log("Chamando createClinic");
+      if (values.name?.trim()) {       
         await createClinic(values.name);
       }
     } catch (Error) {
