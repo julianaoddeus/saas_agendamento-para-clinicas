@@ -17,7 +17,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 
-import AccountForm from "@/app/authentication/components/account";
+import SettingsProfileForm from "@/app/(protected)/clinic/_components/settings-profile";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Sidebar,
@@ -149,7 +149,7 @@ const AppSidebar = () => {
                 alignOffset={-12}
                 sideOffset={8}
               >
-                <AccountForm />
+                <SettingsProfileForm />
                 <DropdownMenuItem
                   onClick={handlerSignOut}
                   className="flex cursor-pointer items-center gap-2"

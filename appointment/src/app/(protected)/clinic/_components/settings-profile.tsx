@@ -1,11 +1,14 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Settings } from "lucide-react";
+import { isRedirectError } from "next/dist/client/components/redirect-error";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
 import { capitalize } from "@/_helpers/capitalize";
+import { updateImageProfile } from "@/actions/add-image-profile";
+import { createClinic } from "@/actions/create-clinic";
 import UploadImageForm from "@/app/(protected)/_components/upload-image-form";
 import { Button } from "@/components/ui/button";
 import {
@@ -32,12 +35,12 @@ const formSchema = z.object({
     .string()
     .trim()
     .min(3, { message: "use pelo menos 3 caracteres" })
-    .transform(capitalize),
-  email: z.string().trim().email({ message: "Insira um e-mail válido" }),
+    .transform(capitalize)
+    .optional(),
   image: z.string().optional(),
 });
 
-export default function AccountForm() {
+export default function SettingsProfileForm() {
   const [open, setOpen] = useState(false);
   const [selectedAvatarFile, setSelectedAvatarFile] = useState<File | null>(
     null,
@@ -47,15 +50,14 @@ export default function AccountForm() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
-      email: "",
       image: "",
     },
     shouldUnregister: true,
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    let avatarUrl = values.image ?? "";
-
+    //salva a imagem no storage
+    let avatarUrl = "";
     if (selectedAvatarFile) {
       const formData = new FormData();
       formData.append("file", selectedAvatarFile);
@@ -69,23 +71,27 @@ export default function AccountForm() {
 
       if (!response.ok) {
         toast.error("Erro ao fazer upload da imagem.");
-        return;
       }
 
       avatarUrl = result?.publicUrl;
       toast.success("Imagem enviada com sucesso.");
-
-      // Atualiza o valor do campo "image" no formulário
-      form.setValue("image", avatarUrl);
     }
 
-    // Envie os dados do formulário (incluindo image)
-    const updatedValues = {
-      ...values,
-      image: avatarUrl,
-    };
+    //salva no banco
+    try {
+      if (values.image?.trim()) {
+        await updateImageProfile(avatarUrl);
+      }
+      if (values.name?.trim()) {
+        console.log("Chamando createClinic");
+        await createClinic(values.name);
+      }
+    } catch (Error) {
+      if (isRedirectError(Error)) return;
 
-    console.log("Dados para envio:", updatedValues);
+      toast.error("Erro ao criar clínica");
+    }
+
     toast.success("Dados atualizados com sucesso.");
     setOpen(false);
   };
@@ -144,19 +150,6 @@ export default function AccountForm() {
                   <FormItem>
                     <FormControl>
                       <Input {...field} placeholder="Nome da clínica" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Input {...field} placeholder="Novo e-mail" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
