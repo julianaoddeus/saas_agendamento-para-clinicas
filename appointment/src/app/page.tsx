@@ -15,7 +15,7 @@ export default function Home() {
 
           <div className="mb-8">
             <Image
-              src="/logoHome.svg"
+              src="/logo_fluxo.svg"
               alt="Logo"
               width={150}
               height={60}
