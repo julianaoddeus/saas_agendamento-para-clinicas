@@ -20,7 +20,7 @@ const SubscriptionPage = () => (
       </PageHeaderContent>
     </PageHeader>
     <PageContent>
-      <SubscriptionPlan active={true} />
+      <SubscriptionPlan active={false} />
     </PageContent>
   </PageContainer>
 );

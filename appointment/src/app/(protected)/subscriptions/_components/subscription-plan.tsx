@@ -1,4 +1,7 @@
-import { CheckCircle2 } from "lucide-react";
+"use client";
+import { loadStripe } from "@stripe/stripe-js";
+import { CheckCircle2, Loader2 } from "lucide-react";
+import { useAction } from "next-safe-action/hooks";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -9,6 +12,7 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 
+import { createStripeCheckOut } from "../../../../actions/create-stripe-checkout/index";
 interface SubscriptionPlanProps {
   active?: boolean;
 }
@@ -26,6 +30,29 @@ export default function SubscriptionPlan({
     "Exportação em CSV",
   ];
 
+  const createStripeCheckOutAction = useAction(createStripeCheckOut, {
+    onSuccess: async ({ data }) => {
+      if (!process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
+        throw new Error("Chave pública do Stripe não configurada");
+
+      const stripe = await loadStripe(
+        process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
+      );
+
+      if (!stripe) throw new Error("Erro ao carregar o Stripe");
+
+      if (!data?.sessionId) throw new Error("Session ID não encontrado");
+
+      await stripe.redirectToCheckout({
+        sessionId: data?.sessionId,
+      });
+    },
+  });
+
+  const handleSubscribeOnClick = async () => {
+    createStripeCheckOutAction.execute();
+  };
+
   return (
     <Card className="w-full max-w-xs">
       <CardHeader className="space-y-2">
@@ -41,7 +68,7 @@ export default function SubscriptionPlan({
           Para profissionais autônomos ou pequenas clínicas
         </p>
         <div className="flex items-baseline gap-1">
-          <span className="text-3xl font-bold">R$59</span>
+          <span className="text-3xl font-bold">R$119,99</span>
           <span className="text-muted-foreground text-sm">/ mês</span>
         </div>
       </CardHeader>
@@ -60,8 +87,19 @@ export default function SubscriptionPlan({
       </CardContent>
 
       <CardFooter>
-        <Button className="w-full" variant={active ? "outline" : "default"}>
-          {active ? "Gerenciar Assinatura" : "Fazer Assinatura"}
+        <Button
+          className="w-full"
+          variant={active ? "outline" : "default"}
+          onClick={active ? () => {} : handleSubscribeOnClick}
+          disabled={createStripeCheckOutAction.isExecuting}
+        >
+          {createStripeCheckOutAction.isExecuting ? (
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          ) : active ? (
+            "Gerenciar Assinatura"
+          ) : (
+            "Fazer Assinatura"
+          )}
         </Button>
       </CardFooter>
     </Card>
